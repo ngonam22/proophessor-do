@@ -14,7 +14,7 @@ return [
             'plugins' => [
                 \Prooph\EventStoreBusBridge\EventPublisher::class,
                 \Prooph\Snapshotter\SnapshotPlugin::class,
-                \Prooph\EventStoreBusBridge\TransactionManager::class,
+                //
             ],
         ],
         'snapshot_store' => [
@@ -30,21 +30,22 @@ return [
         ],
         'snapshotter' => [
             'version_step' => 5,
-        ],
-        'zeromq_producer' => [
-            'dsn' => 'tcp://127.0.0.1:5555', // ZMQ Server Address.
-            'persistent_id' => 'example', // ZMQ Persistent ID to keep connections alive between requests.
-            'rpc' => false, // Use as Query Bus.
+            'aggregate_repositories' => [
+                \Prooph\ProophessorDo\Model\Todo\Todo::class => \Prooph\ProophessorDo\Model\Todo\TodoList::class,
+            ]
         ],
         'service_bus' => [
             'command_bus' => [
+                'plugins' => [
+                    \Prooph\EventStoreBusBridge\TransactionManager::class,
+                ],
                 'router' => [
                     'routes' => [
                         \Prooph\ProophessorDo\Model\User\Command\RegisterUser::class => \Prooph\ProophessorDo\Model\User\Handler\RegisterUserHandler::class,
                         \Prooph\ProophessorDo\Model\Todo\Command\PostTodo::class     => \Prooph\ProophessorDo\Model\Todo\Handler\PostTodoHandler::class,
                         \Prooph\ProophessorDo\Model\Todo\Command\MarkTodoAsDone::class     => \Prooph\ProophessorDo\Model\Todo\Handler\MarkTodoAsDoneHandler::class,
                         \Prooph\ProophessorDo\Model\Todo\Command\AddDeadlineToTodo::class => \Prooph\ProophessorDo\Model\Todo\Handler\AddDeadlineToTodoHandler::class,
-                        \Prooph\Snapshotter\TakeSnapshot::class => 'zeromq_producer',
+                        \Prooph\Snapshotter\TakeSnapshot::class => \Prooph\Snapshotter\Snapshotter::class,
                     ]
                 ]
             ],

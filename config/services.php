@@ -21,6 +21,7 @@ $servicesConfig = [
         \Prooph\ProophessorDo\App\View\Helper\RiotTag::class              => \Prooph\ProophessorDo\App\View\Helper\RiotTag::class,
     ],
     'factories' => [
+        \Prooph\Snapshotter\Snapshotter::class => \Prooph\Snapshotter\Container\SnapshotterFactory::class,
         //Application
         \Zend\Expressive\Application::class           => \Zend\Expressive\Container\ApplicationFactory::class,
         \Prooph\ProophessorDo\App\Commanding\API::class => \Prooph\ProophessorDo\Container\App\Commanding\APIFactory::class,
